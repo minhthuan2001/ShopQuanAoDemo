@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { PRODUCTS, CATEGORIES, Product } from "@/src/data/products";
+import { Product } from "@/src/data/products";
 import ProductCard from "./ProductCard";
 import ProductDetail from "./ProductDetail";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 
-export default function Catalog() {
+interface CatalogProps {
+  products: Product[];
+  categories: string[];
+}
+
+export default function Catalog({ products, categories }: CatalogProps) {
   const [activeCategory, setActiveCategory] = useState("Tất cả");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const filteredProducts = PRODUCTS.filter(p => {
+  const filteredProducts = products.filter(p => {
     const matchesCategory = activeCategory === "Tất cả" || p.category === activeCategory;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -58,7 +63,7 @@ export default function Catalog() {
 
             <Tabs defaultValue="Tất cả" className="w-full">
               <TabsList className="grid grid-cols-3 md:grid-cols-5 h-auto p-1 bg-white shadow-sm rounded-xl border border-gray-100">
-                {CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <TabsTrigger
                     key={category}
                     value={category}
