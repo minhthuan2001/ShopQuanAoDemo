@@ -1,63 +1,50 @@
 import { motion } from "motion/react";
-import { ShoppingBag, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white pt-16 pb-24 lg:pt-32 lg:pb-40">
-      <div className="container mx-auto px-4">
+    <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-32 bg-[#EAD5C5] border-b-[3px] border-dashed border-len-primary/30">
+      <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
+        <img src="https://images.unsplash.com/photo-1584988756534-7db57530be90?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Yarn Background" className="w-full h-full object-cover" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="bg-white/40 backdrop-blur-sm p-8 md:p-12 rounded-[2rem] border-2 border-dashed border-len-primary/40 shadow-2xl"
           >
-            <Badge variant="secondary" className="mb-6 px-4 py-1 text-shopee bg-shopee/10 border-shopee/20 flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              Triển Lãm Sản Phẩm Sáng Tạo
-            </Badge>
-          </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6 max-w-3xl"
-          >
-            Khám phá chi tiết <span className="text-shopee">từng tuyệt tác thiết kế</span>
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl"
-          >
-            Nơi trưng bày và giới thiệu chi tiết cấu tạo, quy trình hoàn thiện của những sản phẩm độc đáo nhất.
-          </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <Button 
-              size="lg" 
-              className="bg-shopee hover:bg-shopee-hover text-white px-8 py-6 text-lg rounded-full shadow-lg shadow-shopee/20 transition-all hover:scale-105 active:scale-95"
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-6xl md:text-8xl font-heading text-white drop-shadow-md mb-4"
+              style={{ textShadow: "2px 2px 4px rgba(91, 58, 41, 0.4)" }}
+            >
+              Đồ len handmade
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-xl md:text-3xl font-heading text-len-primary font-bold mb-8"
+            >
+              Ấm áp từ từng sợi chỉ 🧸
+            </motion.p>
+            
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="bg-len-primary text-white font-sans font-bold px-10 py-4 text-xl rounded-2xl shadow-lg transition-transform hover:scale-105 active:scale-95"
               onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <ShoppingBag className="mr-2 h-5 w-5" />
-              Khám phá bộ sưu tập
-            </Button>
+              Mua ngay
+            </motion.button>
           </motion.div>
         </div>
-      </div>
-      
-      {/* Background decoration */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-shopee/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-shopee/5 rounded-full blur-3xl" />
       </div>
     </section>
   );

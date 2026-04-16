@@ -1,9 +1,8 @@
+import React from "react";
 import { motion } from "motion/react";
-import { ExternalLink, Tag } from "lucide-react";
+import { toast } from "sonner";
 import { Product } from "@/src/data/products";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useCart } from "../contexts/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -12,8 +11,16 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onSelect }: ProductCardProps) {
+  const { addToCart } = useCart();
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart(product);
+    toast.success(`Đã thêm ${product.name} vào giỏ hàng! 🧶`);
   };
 
   return (
@@ -24,52 +31,39 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
       exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.3 }}
+      className="h-full"
     >
-      <Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-shadow duration-300 h-full flex flex-col group">
-        <div className="relative aspect-square overflow-hidden">
+      <div 
+        className="bg-len-card rounded-xl border border-len-primary/20 shadow-md p-3 h-full flex flex-col group overflow-hidden cursor-pointer"
+        onClick={() => onSelect(product)}
+      >
+        <div className="relative aspect-square overflow-hidden rounded-lg border border-len-primary/10 bg-white">
           <img
             src={product.image}
             alt={product.name}
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-            {product.badges.map((badge) => (
-              <Badge 
-                key={badge} 
-                className={`
-                  ${badge === 'Deal hot' ? 'bg-red-500 hover:bg-red-600' : ''}
-                  ${badge === 'Bán chạy' ? 'bg-orange-500 hover:bg-orange-600' : ''}
-                  ${badge === 'Giảm sâu' ? 'bg-shopee hover:bg-shopee-hover' : ''}
-                  text-white border-none text-[10px] px-2 py-0.5
-                `}
-              >
-                {badge}
-              </Badge>
-            ))}
-          </div>
         </div>
         
-        <CardContent className="p-4 flex-grow">
-          <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-medium">{product.category}</p>
-          <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-shopee transition-colors">
+        <div className="p-3 flex-grow flex flex-col items-center justify-center text-center">
+          <h3 className="font-heading text-2xl font-bold text-len-primary line-clamp-2 mb-1">
             {product.name}
           </h3>
           <div className="mt-auto">
-            <span className="text-shopee font-bold text-lg">{formatPrice(product.discountPrice)}</span>
+            <span className="text-len-primary font-bold text-lg">{formatPrice(product.discountPrice)}</span>
           </div>
-        </CardContent>
+        </div>
         
-        <CardFooter className="p-4 pt-0">
-          <Button 
-            className="w-full bg-shopee hover:bg-shopee-hover text-white font-bold rounded-lg transition-all group-hover:shadow-lg group-hover:shadow-shopee/20"
-            onClick={() => onSelect(product)}
+        <div className="mt-auto pt-2">
+          <button 
+            className="w-full bg-len-primary/90 hover:bg-len-primary text-white font-bold py-2.5 rounded-lg shadow-sm transition-all text-sm"
+            onClick={handleAddToCart}
           >
-            Xem thêm
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Button>
-        </CardFooter>
-      </Card>
+            Thêm vào giỏ
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 }

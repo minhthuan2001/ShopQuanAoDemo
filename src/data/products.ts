@@ -1,6 +1,7 @@
 export interface ProductPart {
   id: string;
   name: string;
+  composition?: string;
   image: string;
   price: number;
   instructions: string;

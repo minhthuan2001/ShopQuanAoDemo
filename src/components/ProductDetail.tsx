@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Info, Package, Wrench } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { Product, ProductPart } from "@/src/data/products";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "../contexts/CartContext";
 
 interface ProductDetailProps {
   product: Product;
@@ -14,12 +16,18 @@ interface ProductDetailProps {
 
 export default function ProductDetail({ product, onBack }: ProductDetailProps) {
   const [selectedPart, setSelectedPart] = useState<ProductPart | null>(null);
+  const { addToCart } = useCart();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
 
-  const currentDisplay = selectedPart || {
+  const currentDisplay = selectedPart ? {
+    name: selectedPart.name,
+    image: selectedPart.image,
+    price: selectedPart.price > 0 ? selectedPart.price : product.discountPrice,
+    instructions: selectedPart.instructions
+  } : {
     name: product.name,
     image: product.image,
     price: product.discountPrice,
@@ -31,17 +39,16 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100"
+      className="bg-len-card rounded-3xl overflow-hidden border-2 border-len-primary/20 shadow-xl"
     >
       <div className="p-6 md:p-10">
-        <Button 
-          variant="ghost" 
+        <button 
           onClick={onBack}
-          className="mb-8 hover:bg-shopee/10 hover:text-shopee transition-colors rounded-full font-bold"
+          className="mb-8 hover:bg-len-secondary/30 text-len-primary transition-colors rounded-full font-bold flex items-center px-4 py-2"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Quay lại
-        </Button>
+        </button>
 
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Left Column: Image and Sub-items */}
@@ -62,17 +69,13 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
 
             {product.parts && product.parts.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                  <Package className="w-4 h-4" />
-                  Thành phần cấu tạo
-                </h3>
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => setSelectedPart(null)}
                     className={`px-4 py-2 rounded-xl border-2 transition-all font-bold text-sm ${
                       !selectedPart 
-                        ? "border-shopee bg-shopee text-white shadow-lg shadow-shopee/20" 
-                        : "border-gray-100 bg-white text-gray-600 hover:border-shopee/30"
+                        ? "border-len-primary bg-len-primary text-white shadow-lg" 
+                        : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
                     }`}
                   >
                     {product.composition || "Nguyên bản"}
@@ -83,11 +86,11 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
                       onClick={() => setSelectedPart(part)}
                       className={`px-4 py-2 rounded-xl border-2 transition-all font-bold text-sm ${
                         selectedPart?.id === part.id 
-                          ? "border-shopee bg-shopee text-white shadow-lg shadow-shopee/20" 
-                          : "border-gray-100 bg-white text-gray-600 hover:border-shopee/30"
+                          ? "border-len-primary bg-len-primary text-white shadow-lg" 
+                          : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
                       }`}
                     >
-                      {part.name}
+                      {part.composition || part.name}
                     </button>
                   ))}
                 </div>
@@ -107,29 +110,52 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
                 className="space-y-8"
               >
                 <div>
-                  <Badge className="bg-shopee/10 text-shopee border-none mb-4 px-4 py-1 rounded-full">
-                    {selectedPart ? "Chi tiết bộ phận" : "Thông tin sản phẩm"}
-                  </Badge>
-                  <h2 className="text-4xl font-black text-gray-900 leading-tight">
+                  <h2 className="text-4xl md:text-5xl font-heading font-bold text-len-primary leading-tight">
                     {currentDisplay.name}
                   </h2>
                 </div>
 
-                <div className="p-6 bg-gray-50 rounded-3xl border border-gray-100">
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Wrench className="w-4 h-4" />
-                    Hướng dẫn & Đặc điểm
-                  </p>
-                  <p className="text-lg text-gray-700 leading-relaxed italic">
+                <div className="p-6 bg-[#FDF8F5] rounded-3xl border border-len-primary/20 shadow-inner">
+                  <p className="text-lg text-len-primary leading-relaxed font-medium">
                     "{currentDisplay.instructions}"
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Giá trị</p>
-                  <p className="text-5xl font-black text-shopee">
-                    {formatPrice(currentDisplay.price)}
-                  </p>
+                {currentDisplay.price > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-len-primary/70 uppercase tracking-widest">Giá trị</p>
+                    <p className="text-4xl md:text-5xl font-bold text-len-primary">
+                      {formatPrice(currentDisplay.price)}
+                    </p>
+                  </div>
+                )}
+
+                <div className="pt-4">
+                  <button 
+                    onClick={() => {
+                      if (selectedPart && selectedPart.price > 0) {
+                        const partProduct: Product = {
+                          ...product,
+                          id: `${product.id}-${selectedPart.id}`,
+                          name: `${product.name} (${selectedPart.name})`,
+                          image: selectedPart.image,
+                          discountPrice: selectedPart.price,
+                          originalPrice: selectedPart.price,
+                          parts: []
+                        };
+                        addToCart(partProduct);
+                        toast.success(`Đã thêm ${selectedPart.name} vào giỏ hàng! 🧶`);
+                      } else {
+                        // If no part is selected OR the part has no price (using main price)
+                        // add the main product to cart
+                        addToCart(product);
+                        toast.success(`Đã thêm ${product.name} vào giỏ hàng! 🧶`);
+                      }
+                    }}
+                    className="w-full md:w-auto bg-len-primary hover:bg-len-primary/90 text-white font-bold py-4 px-12 rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95 text-lg"
+                  >
+                    Thêm vào giỏ
+                  </button>
                 </div>
               </motion.div>
             </AnimatePresence>

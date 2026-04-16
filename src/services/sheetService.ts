@@ -10,7 +10,7 @@ const SHEET_URLS = {
 interface RawProduct {
   'Mã Danh Mục': string;
   'Mã Sản Phẩm': string;
-  'Tên Sản Phảm': string;
+  'Tên Sản Phẩm': string;
   'Giới Thiệu Về Sản Phẩm': string;
   'Thành Phần Cầu Tạo': string;
   'Giá': string;
@@ -19,7 +19,7 @@ interface RawProduct {
 
 interface RawPart {
   'Mã Sản Phẩm': string;
-  'Tên Sản Phảm': string;
+  'Tên Sản Phẩm': string;
   'Giới Thiệu Về Sản Phẩm': string;
   'Thành Phần Cầu Tạo': string;
   'Giá': string;
@@ -62,7 +62,7 @@ export async function fetchSheetData() {
       categoryMap[cat['Mã Danh Mục']] = cat['Tên Danh Mục'];
     });
 
-    const categoriesList = ["Tất cả", ...categoriesData.map(cat => cat['Tên Danh Mục'])];
+    const categoriesList = ["Tất cả", ...categoriesData.map(cat => cat['Tên Danh Mục']).filter(name => !!name)];
 
     // Group parts by product ID
     const partsByProduct: Record<string, ProductPart[]> = {};
@@ -73,7 +73,8 @@ export async function fetchSheetData() {
       }
       partsByProduct[productId].push({
         id: `${productId}-P${index}`,
-        name: part['Tên Sản Phảm'],
+        name: part['Tên Sản Phẩm'],
+        composition: part['Thành Phần Cầu Tạo'],
         image: part['Link Ảnh'],
         price: parsePrice(part['Giá']),
         instructions: part['Giới Thiệu Về Sản Phẩm']
@@ -81,19 +82,21 @@ export async function fetchSheetData() {
     });
 
     // Map products
-    const products: Product[] = productsData.map(p => ({
-      id: p['Mã Sản Phẩm'],
-      name: p['Tên Sản Phảm'],
-      image: p['Link Ảnh'],
-      originalPrice: parsePrice(p['Giá']),
-      discountPrice: parsePrice(p['Giá']),
-      category: categoryMap[p['Mã Danh Mục']] || "Khác",
-      affiliateUrl: "https://shopee.vn", // Default as per previous turns
-      badges: ["Bán chạy"], // Default as per previous turns
-      composition: p['Thành Phần Cầu Tạo'],
-      description: p['Giới Thiệu Về Sản Phẩm'],
-      parts: partsByProduct[p['Mã Sản Phẩm']] || []
-    }));
+    const products: Product[] = productsData
+      .filter(p => p['Mã Sản Phẩm'] && p['Tên Sản Phẩm'])
+      .map(p => ({
+        id: p['Mã Sản Phẩm'],
+        name: p['Tên Sản Phẩm'],
+        image: p['Link Ảnh'],
+        originalPrice: parsePrice(p['Giá']),
+        discountPrice: parsePrice(p['Giá']),
+        category: categoryMap[p['Mã Danh Mục']] || "Khác",
+        affiliateUrl: "https://shopee.vn", // Default as per previous turns
+        badges: ["Bán chạy"], // Default as per previous turns
+        composition: p['Thành Phần Cầu Tạo'],
+        description: p['Giới Thiệu Về Sản Phẩm'],
+        parts: partsByProduct[p['Mã Sản Phẩm']] || []
+      }));
 
     return {
       products,
