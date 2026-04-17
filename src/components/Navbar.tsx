@@ -77,7 +77,7 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
                 <p className="text-sm text-len-primary/90 font-semibold">{formatPrice(item.product.discountPrice)}</p>
                 <div className="flex items-center gap-3 mt-2">
                   <button onClick={(e) => { e.stopPropagation(); decreaseQuantity(item.product.id); }} className="w-7 h-7 rounded-full bg-len-secondary/30 text-len-primary font-bold flex items-center justify-center hover:bg-len-secondary/80 transition-colors"><Minus className="w-3 h-3" /></button>
-                  <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
+                  <span className="text-sm font-bold w-4 text-center text-len-primary">{item.quantity}</span>
                   <button onClick={(e) => { e.stopPropagation(); addToCart(item.product); }} className="w-7 h-7 rounded-full bg-len-primary text-white font-bold flex items-center justify-center hover:bg-len-primary/90 transition-colors"><Plus className="w-3 h-3" /></button>
                 </div>
               </div>
@@ -108,46 +108,69 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-2 border-dashed border-len-primary/20 ${
-        isScrolled ? "bg-len-bg/95 backdrop-blur-md shadow-sm py-4" : "bg-len-bg py-6"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-2 border-dashed border-white/10 ${
+        isScrolled ? "bg-len-primary/95 backdrop-blur-md shadow-lg py-4" : "bg-len-primary py-6"
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2" onClick={(e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }}>
-          <Package className="w-8 h-8 text-len-primary" />
-          <span className="font-heading text-3xl font-bold text-len-primary tracking-wide">
-            Len Nhà Tú
+          <img 
+            src="/logo.png" 
+            alt="Xâu.craft Logo" 
+            className="w-10 h-10 object-contain invert-0 brightness-200"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              const nextSibling = (e.target as HTMLImageElement).nextElementSibling;
+              if (nextSibling) {
+                (nextSibling as HTMLElement).style.display = 'block';
+              }
+            }}
+          />
+          <Package className="w-8 h-8 text-len-primary-text hidden" />
+          <span className="font-heading text-3xl font-bold text-len-primary-text tracking-wide">
+            Xâu.craft
           </span>
         </a>
         
-        {/* Desktop Links */}
+        {/* Desktop Links - Limited to avoid breaking layout */}
         <div className="hidden md:flex flex-1 mx-8 items-center justify-center gap-4 flex-wrap max-h-16 overflow-hidden">
-          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }} className="font-bold text-len-primary hover:text-len-primary/70 transition-colors whitespace-nowrap">Trang chủ</a>
-          {categories.filter(cat => cat !== "Tất cả").map((cat) => (
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }} className="font-bold text-len-primary-text hover:text-len-primary-text/70 transition-colors whitespace-nowrap">Trang chủ</a>
+          {categories.filter(cat => cat !== "Tất cả").slice(0, 4).map((cat) => (
             <React.Fragment key={cat}>
-              <span className="text-len-primary/30">|</span>
+              <span className="text-len-primary-text/30">|</span>
               <button 
                 onClick={(e) => handleCategoryClick(cat, e)}
-                className={`font-bold transition-colors whitespace-nowrap ${activeCategory === cat ? 'text-len-primary border-b-2 border-len-primary' : 'text-len-primary hover:text-len-primary/70'}`}
+                className={`font-bold transition-colors whitespace-nowrap ${activeCategory === cat ? 'text-len-primary-text border-b-2 border-len-primary-text' : 'text-len-primary-text hover:text-len-primary-text/70'}`}
               >
                 {cat}
               </button>
             </React.Fragment>
           ))}
+          {categories.length > 5 && (
+            <>
+              <span className="text-len-primary-text/30">|</span>
+              <button 
+                onClick={() => document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })}
+                className="font-bold text-len-primary-text/80 hover:text-len-primary-text transition-colors whitespace-nowrap italic"
+              >
+                Xem thêm...
+              </button>
+            </>
+          )}
         </div>
         
         {/* Icons */}
-        <div className="hidden md:flex items-center gap-5 text-len-primary cart-area">
+        <div className="hidden md:flex items-center gap-5 text-len-primary-text cart-area">
           <button 
             onClick={handleSearchClick}
-            className="text-len-primary hover:text-len-primary/70 transition-colors"
+            className="text-len-primary-text hover:text-len-primary-text/70 transition-colors"
           >
             <Search className="w-5 h-5" />
           </button>
           <div className="relative">
             <button 
-              className="text-len-primary hover:text-len-primary/70 transition-colors relative"
+              className="text-len-primary-text hover:text-len-primary-text/70 transition-colors relative"
               onClick={() => setIsCartOpen(!isCartOpen)}
             >
               <ShoppingCart className="w-6 h-6" />
@@ -165,13 +188,13 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
         <div className="flex items-center gap-4 md:hidden cart-area">
           <button 
             onClick={handleSearchClick}
-            className="text-len-primary hover:text-len-primary/70 transition-colors"
+            className="text-len-primary-text hover:text-len-primary-text/70 transition-colors"
           >
             <Search className="w-5 h-5" />
           </button>
           <div className="relative">
             <button 
-              className="text-len-primary relative"
+              className="text-len-primary-text relative"
               onClick={() => setIsCartOpen(!isCartOpen)}
             >
               <ShoppingCart className="w-6 h-6" />
@@ -184,7 +207,7 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
             {isCartOpen && <CartDropdown />}
           </div>
           <button 
-            className="p-1 text-len-primary transition-colors hover:text-len-primary/70"
+            className="p-1 text-len-primary-text transition-colors hover:text-len-primary-text/70"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -194,12 +217,12 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
       
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-len-bg shadow-xl border-t-2 border-dashed border-len-primary/20 p-4 flex flex-col gap-4 animate-in slide-in-from-top duration-300 z-50">
-          <a href="#" className="text-lg font-bold py-2 border-b border-len-primary/10 text-len-primary" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); window.scrollTo({top: 0, behavior: 'smooth'}); }}>Trang chủ</a>
+        <div className="md:hidden absolute top-full left-0 right-0 bg-len-primary shadow-xl border-t-2 border-dashed border-white/10 p-4 flex flex-col gap-4 animate-in slide-in-from-top duration-300 z-50">
+          <a href="#" className="text-lg font-bold py-2 border-b border-white/10 text-len-primary-text" onClick={(e) => { e.preventDefault(); setIsMobileMenuOpen(false); window.scrollTo({top: 0, behavior: 'smooth'}); }}>Trang chủ</a>
           {categories.filter(cat => cat !== "Tất cả").map((cat) => (
             <button 
               key={cat}
-              className={`text-lg font-bold py-2 border-b border-len-primary/10 text-left ${activeCategory === cat ? 'text-len-primary' : 'text-len-primary hover:text-len-primary/70'}`} 
+              className={`text-lg font-bold py-2 border-b border-white/10 text-left ${activeCategory === cat ? 'text-len-primary-text' : 'text-len-primary-text hover:text-len-primary-text/70'}`} 
               onClick={(e) => handleCategoryClick(cat, e)}
             >
               {cat}

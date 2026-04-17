@@ -10,11 +10,12 @@
     --font-sans: 'Quicksand', sans-serif;
     --font-cursive: 'Dancing Script', cursive;
     --color-len-bg: #FDF8F5;
-    --color-len-primary: #5B3A29;
-    --color-len-secondary: #E3CDB8;
+    --color-len-primary: #b66f43;
+    --color-len-primary-text: #FFFDF4;
+    --color-len-secondary: #EAD5C5;
     --color-len-card: #FFF8F0;
-    --color-shopee: #5B3A29;
-    --color-shopee-hover: #4A2E20;
+    --color-shopee: #b66f43;
+    --color-shopee-hover: #9e5d36;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

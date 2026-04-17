@@ -28,7 +28,17 @@ export default function Catalog({
   const filteredProducts = products.filter(p => {
     const productName = p.name || "";
     const matchesCategory = activeCategory === "Tất cả" || p.category === activeCategory;
-    const matchesSearch = productName.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Check if main product name matches
+    const mainNameMatch = productName.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Check if any of the child products (parts) match the search query
+    const partNameMatch = p.parts?.some(part => 
+      (part.name || "").toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const matchesSearch = mainNameMatch || partNameMatch;
+    
     return matchesCategory && matchesSearch;
   });
 
@@ -70,7 +80,10 @@ export default function Catalog({
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => {
+                setActiveCategory(category);
+                document.getElementById('featured-heading')?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 font-bold transition-all
                 ${activeCategory === category 
                   ? "bg-len-secondary border-len-primary text-len-primary shadow-inner" 
@@ -84,7 +97,7 @@ export default function Catalog({
           ))}
         </div>
 
-        <div className="flex flex-col items-center mb-12">
+        <div id="featured-heading" className="flex flex-col items-center mb-12 scroll-mt-32">
           <div className="flex items-center gap-4 mb-8">
             <div className="h-px w-16 md:w-24 bg-len-primary"></div>
             <h2 className="text-4xl md:text-5xl font-heading text-len-primary">Sản phẩm nổi bật</h2>
