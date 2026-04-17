@@ -116,7 +116,7 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
         {/* Logo */}
         <a href="#" className="flex items-center gap-2" onClick={(e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }}>
           <img 
-            src="/logo.png" 
+            src="/logo-navbar.png" 
             alt="Xâu.craft Logo" 
             className="w-10 h-10 object-contain invert-0 brightness-200"
             onError={(e) => {
