@@ -34,10 +34,10 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
       className="h-full"
     >
       <div 
-        className="bg-len-card rounded-xl border border-len-primary/20 shadow-md p-3 h-full flex flex-col group overflow-hidden cursor-pointer"
+        className="bg-len-card rounded-xl border-2 border-dashed border-len-primary/20 shadow-md p-3 h-full flex flex-col group overflow-hidden cursor-pointer hover:border-len-primary/40 transition-all"
         onClick={() => onSelect(product)}
       >
-        <div className="relative aspect-square overflow-hidden rounded-lg border border-len-primary/10 bg-white">
+        <div className="relative aspect-square overflow-hidden rounded-lg border-2 border-dashed border-len-primary/15 bg-white">
           <img
             src={product.image}
             alt={product.name}
@@ -57,7 +57,7 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
         
         <div className="mt-auto pt-2">
           <button 
-            className="w-full bg-len-primary/90 hover:bg-len-primary text-white font-bold py-2.5 rounded-lg shadow-sm transition-all text-sm"
+            className="w-full bg-len-primary/90 hover:bg-len-primary text-white font-bold py-2.5 rounded-lg shadow-sm transition-all text-sm border-2 border-dashed border-white/40 hover:border-white/60"
             onClick={handleAddToCart}
           >
             Thêm vào giỏ

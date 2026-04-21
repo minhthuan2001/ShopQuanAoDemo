@@ -59,8 +59,8 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
   };
 
   const CartDropdown = () => (
-    <div className="absolute top-12 right-0 w-80 md:w-96 bg-len-card border-2 border-len-primary/20 shadow-2xl rounded-2xl p-4 flex flex-col gap-4 z-50 cursor-default" onClick={(e) => e.stopPropagation()}>
-      <div className="flex justify-between items-center border-b border-len-primary/10 pb-2">
+    <div className="absolute top-12 right-0 w-80 md:w-96 bg-len-card border-2 border-dashed border-len-primary/20 shadow-2xl rounded-2xl p-4 flex flex-col gap-4 z-50 cursor-default" onClick={(e) => e.stopPropagation()}>
+      <div className="flex justify-between items-center border-b-2 border-dashed border-len-primary/10 pb-2">
         <h3 className="font-heading text-2xl font-bold text-len-primary">Giỏ hàng của bạn</h3>
         <button onClick={() => setIsCartOpen(false)} className="text-len-primary/50 hover:text-len-primary"><X className="w-5 h-5" /></button>
       </div>
@@ -70,8 +70,8 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
       ) : (
         <div className="flex flex-col gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
           {cart.map((item) => (
-            <div key={item.product.id} className="flex gap-3 items-center bg-white p-3 rounded-xl border border-len-primary/10 relative">
-              <img src={item.product.image} alt={item.product.name} className="w-16 h-16 object-cover rounded-lg border border-len-primary/10" referrerPolicy="no-referrer" />
+            <div key={item.product.id} className="flex gap-3 items-center bg-white p-3 rounded-xl border-2 border-dashed border-len-primary/10 relative">
+              <img src={item.product.image} alt={item.product.name} className="w-16 h-16 object-cover rounded-lg border-2 border-dashed border-len-primary/10" referrerPolicy="no-referrer" />
               <div className="flex-1 min-w-0 pr-6">
                 <p className="text-sm font-bold text-len-primary truncate mb-1">{item.product.name}</p>
                 <p className="text-sm text-len-primary/90 font-semibold">{formatPrice(item.product.discountPrice)}</p>
@@ -98,7 +98,7 @@ export default function Navbar({ categories, activeCategory, setActiveCategory }
             <span className="font-bold text-len-primary font-heading text-xl">Tổng cộng:</span>
             <span className="font-bold text-len-primary text-xl">{formatPrice(cartTotal)}</span>
           </div>
-          <button className="w-full bg-len-primary text-white font-bold py-3.5 rounded-xl hover:bg-len-primary/90 transition-colors shadow-md text-lg">
+          <button className="w-full bg-len-primary text-white font-bold py-3.5 rounded-xl hover:bg-len-primary/90 transition-colors shadow-md text-lg border-2 border-dashed border-white/30">
             Thanh toán ngay
           </button>
         </div>

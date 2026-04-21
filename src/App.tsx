@@ -57,23 +57,44 @@ export default function App() {
         <Navbar categories={categories} activeCategory={activeCategory} setActiveCategory={handleCategoryChange} />
         <main>
           <Hero />
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-12 h-12 border-4 border-len-primary/20 border-t-len-primary rounded-full animate-spin mb-4" />
-              <p className="text-len-primary/60 font-medium">Đang tải dữ liệu trưng bày...</p>
+          
+          <div className="relative overflow-hidden">
+            {/* Main Content Area Background Image */}
+            <div className="absolute inset-0 z-0">
+              <img 
+                src="/content-bg.png" 
+                alt="Content Background" 
+                className="w-full h-full object-cover opacity-100" 
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1597561841310-949f99277051?auto=format&fit=crop&w=2000&q=80";
+                }}
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-len-bg via-transparent to-len-bg/50"></div>
             </div>
-          ) : (
-            <Catalog 
-              products={products} 
-              categories={categories} 
-              activeCategory={activeCategory} 
-              setActiveCategory={handleCategoryChange}
-              selectedProduct={selectedProduct}
-              setSelectedProduct={setSelectedProduct}
-            />
-          )}
+
+            <div className="relative z-10">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <div className="w-12 h-12 border-4 border-len-primary/20 border-t-len-primary rounded-full animate-spin mb-4" />
+                  <p className="text-len-primary/60 font-medium">Đang tải dữ liệu trưng bày...</p>
+                </div>
+              ) : (
+                <>
+                  <Catalog 
+                    products={products} 
+                    categories={categories} 
+                    activeCategory={activeCategory} 
+                    setActiveCategory={handleCategoryChange}
+                    selectedProduct={selectedProduct}
+                    setSelectedProduct={setSelectedProduct}
+                  />
+                  <Footer />
+                </>
+              )}
+            </div>
+          </div>
         </main>
-        <Footer />
       </div>
     </CartProvider>
   );

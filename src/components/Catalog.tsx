@@ -84,7 +84,7 @@ export default function Catalog({
                 setActiveCategory(category);
                 document.getElementById('featured-heading')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 font-bold transition-all
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-dashed font-bold transition-all
                 ${activeCategory === category 
                   ? "bg-len-secondary border-len-primary text-len-primary shadow-inner" 
                   : "bg-len-card border-len-primary/40 text-len-primary hover:bg-len-secondary/50"
@@ -113,7 +113,7 @@ export default function Catalog({
                 placeholder="Tìm sản phẩm..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-len-card rounded-xl border border-len-primary/20 shadow-sm focus:outline-none focus:ring-2 focus:ring-len-primary/20 focus:border-len-primary transition-all text-len-primary placeholder:text-len-primary/50"
+                className="w-full pl-12 pr-4 py-3 bg-len-card rounded-xl border-2 border-dashed border-len-primary/20 shadow-sm focus:outline-none focus:ring-2 focus:ring-len-primary/20 focus:border-len-primary transition-all text-len-primary placeholder:text-len-primary/50"
               />
             </div>
           </div>

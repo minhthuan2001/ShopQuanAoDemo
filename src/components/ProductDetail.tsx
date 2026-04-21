@@ -39,7 +39,7 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="bg-len-card rounded-3xl overflow-hidden border-2 border-len-primary/20 shadow-xl"
+      className="bg-len-card rounded-3xl overflow-hidden border-2 border-dashed border-len-primary/20 shadow-xl"
     >
       <div className="p-6 md:p-10">
         <button 
@@ -57,7 +57,7 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
               key={currentDisplay.image}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-gray-50 max-w-sm mx-auto lg:mx-0"
+              className="aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-dashed border-len-primary/10 max-w-sm mx-auto lg:mx-0 bg-white"
             >
               <img 
                 src={currentDisplay.image} 
@@ -72,7 +72,7 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => setSelectedPart(null)}
-                    className={`px-4 py-2 rounded-xl border-2 transition-all font-bold text-sm ${
+                    className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
                       !selectedPart 
                         ? "border-len-primary bg-len-primary text-white shadow-lg" 
                         : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
@@ -84,7 +84,7 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
                     <button
                       key={part.id}
                       onClick={() => setSelectedPart(part)}
-                      className={`px-4 py-2 rounded-xl border-2 transition-all font-bold text-sm ${
+                      className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
                         selectedPart?.id === part.id 
                           ? "border-len-primary bg-len-primary text-white shadow-lg" 
                           : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
@@ -115,7 +115,7 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
                   </h2>
                 </div>
 
-                <div className="p-6 bg-[#FDF8F5] rounded-3xl border border-len-primary/20 shadow-inner">
+                <div className="p-6 bg-[#FDF8F5] rounded-3xl border-2 border-dashed border-len-primary/20 shadow-inner">
                   <p className="text-lg text-len-primary leading-relaxed font-medium">
                     "{currentDisplay.instructions}"
                   </p>
@@ -147,12 +147,12 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
                         toast.success(`Đã thêm ${selectedPart.name} vào giỏ hàng! 🧶`);
                       } else {
                         // If no part is selected OR the part has no price (using main price)
-                        // add the main product to cart
+                        // add the main price to cart
                         addToCart(product);
                         toast.success(`Đã thêm ${product.name} vào giỏ hàng! 🧶`);
                       }
                     }}
-                    className="w-full md:w-auto bg-len-primary hover:bg-len-primary/90 text-white font-bold py-4 px-12 rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95 text-lg"
+                    className="w-full md:w-auto bg-len-primary hover:bg-len-primary/90 text-white font-bold py-4 px-12 rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95 text-lg border-2 border-dashed border-white/30"
                   >
                     Thêm vào giỏ
                   </button>
