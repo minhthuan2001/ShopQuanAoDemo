@@ -5,6 +5,7 @@ export interface ProductPart {
   image: string;
   price: number;
   instructions: string;
+  videoUrl?: string;
 }
 
 export interface Product {
@@ -19,6 +20,7 @@ export interface Product {
   composition?: string;
   description?: string;
   parts?: ProductPart[];
+  videoUrl?: string;
 }
 
 export const CATEGORIES: string[] = ["Tất cả"];

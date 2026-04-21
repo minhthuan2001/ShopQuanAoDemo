@@ -15,6 +15,7 @@ interface RawProduct {
   'Thành Phần Cầu Tạo': string;
   'Giá': string;
   'Link Ảnh': string;
+  'Link Video'?: string;
 }
 
 interface RawPart {
@@ -24,6 +25,7 @@ interface RawPart {
   'Thành Phần Cầu Tạo': string;
   'Giá': string;
   'Link Ảnh': string;
+  'Link Video'?: string;
 }
 
 interface RawCategory {
@@ -77,7 +79,8 @@ export async function fetchSheetData() {
         composition: part['Thành Phần Cầu Tạo'],
         image: part['Link Ảnh'],
         price: parsePrice(part['Giá']),
-        instructions: part['Giới Thiệu Về Sản Phẩm']
+        instructions: part['Giới Thiệu Về Sản Phẩm'],
+        videoUrl: part['Link Video']
       });
     });
 
@@ -95,6 +98,7 @@ export async function fetchSheetData() {
         badges: ["Bán chạy"], // Default as per previous turns
         composition: p['Thành Phần Cầu Tạo'],
         description: p['Giới Thiệu Về Sản Phẩm'],
+        videoUrl: p['Link Video'],
         parts: partsByProduct[p['Mã Sản Phẩm']] || []
       }));
 

@@ -47,6 +47,8 @@ export default function Catalog({
     if (lower.includes("hoa")) return "🌸";
     if (lower.includes("gấu")) return "🐻";
     if (lower.includes("khóa")) return "🔑";
+    if (lower.includes("trang trí")) return "🎀";
+    if (lower.includes("túi")) return "👜";
     if (lower.includes("tất cả")) return "✨";
     return "🎁";
   };

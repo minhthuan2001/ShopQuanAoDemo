@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Youtube, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Product, ProductPart } from "@/src/data/products";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,24 @@ interface ProductDetailProps {
 
 export default function ProductDetail({ product, onBack }: ProductDetailProps) {
   const [selectedPart, setSelectedPart] = useState<ProductPart | null>(null);
+  const [viewingVideo, setViewingVideo] = useState(false);
   const { addToCart } = useCart();
+
+  const getYouTubeEmbedUrl = (url?: string) => {
+    if (!url) return "";
+    
+    // Tự động tìm ID video từ các link YouTube (bao gồm cả youtube.com/shorts/)
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([^"&?\/\s]{11})/;
+    const match = url.match(regExp);
+    
+    // Nếu tìm thấy đúng ID của YouTube, trả về link embed chuẩn kèm tự động chạy
+    if (match && match[1]) {
+      return `https://www.youtube.com/embed/${match[1]}?autoplay=1`;
+    }
+    
+    // Nếu không phải của YouTube (vd tiktok) hoặc lỗi cú pháp, trả về nguyên bản link truyền vào
+    return url;
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -26,12 +43,14 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
     name: selectedPart.name,
     image: selectedPart.image,
     price: selectedPart.price > 0 ? selectedPart.price : product.discountPrice,
-    instructions: selectedPart.instructions
+    instructions: selectedPart.instructions,
+    videoUrl: selectedPart.videoUrl
   } : {
     name: product.name,
     image: product.image,
     price: product.discountPrice,
-    instructions: product.description || "Đây là sản phẩm nguyên bản. Vui lòng chọn các bộ phận bên dưới để xem chi tiết cấu tạo và hướng dẫn cụ thể."
+    instructions: product.description || "Đây là sản phẩm nguyên bản. Vui lòng chọn các bộ phận bên dưới để xem chi tiết cấu tạo và hướng dẫn cụ thể.",
+    videoUrl: product.videoUrl
   };
 
   return (
@@ -54,45 +73,87 @@ export default function ProductDetail({ product, onBack }: ProductDetailProps) {
           {/* Left Column: Image and Sub-items */}
           <div className="lg:col-span-5 space-y-8">
             <motion.div 
-              key={currentDisplay.image}
+              key={currentDisplay.image + viewingVideo}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-dashed border-len-primary/10 max-w-sm mx-auto lg:mx-0 bg-white"
             >
-              <img 
-                src={currentDisplay.image} 
-                alt={currentDisplay.name} 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
+              {viewingVideo && currentDisplay.videoUrl ? (
+                <iframe
+                  src={getYouTubeEmbedUrl(currentDisplay.videoUrl)}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <img 
+                  src={currentDisplay.image} 
+                  alt={currentDisplay.name} 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              )}
             </motion.div>
 
-            {product.parts && product.parts.length > 0 && (
+            {((product.parts && product.parts.length > 0) || currentDisplay.videoUrl) && (
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-3">
-                  <button
-                    onClick={() => setSelectedPart(null)}
-                    className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
-                      !selectedPart 
-                        ? "border-len-primary bg-len-primary text-white shadow-lg" 
-                        : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
-                    }`}
-                  >
-                    {product.composition || "Nguyên bản"}
-                  </button>
-                  {product.parts.map((part) => (
+                  {product.parts && product.parts.length > 0 && (
+                    <>
+                      <button
+                        onClick={() => {
+                          setSelectedPart(null);
+                          setViewingVideo(false);
+                        }}
+                        className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
+                          !selectedPart 
+                            ? "border-len-primary bg-len-primary text-white shadow-lg" 
+                            : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
+                        }`}
+                      >
+                        {product.composition || "Nguyên bản"}
+                      </button>
+                      {product.parts.map((part) => (
+                        <button
+                          key={part.id}
+                          onClick={() => {
+                            setSelectedPart(part);
+                            setViewingVideo(false);
+                          }}
+                          className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
+                            selectedPart?.id === part.id 
+                              ? "border-len-primary bg-len-primary text-white shadow-lg" 
+                              : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
+                          }`}
+                        >
+                          {part.composition || part.name}
+                        </button>
+                      ))}
+                    </>
+                  )}
+                  
+                  {currentDisplay.videoUrl && (
                     <button
-                      key={part.id}
-                      onClick={() => setSelectedPart(part)}
-                      className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm ${
-                        selectedPart?.id === part.id 
-                          ? "border-len-primary bg-len-primary text-white shadow-lg" 
-                          : "border-len-primary/30 bg-len-card text-len-primary hover:bg-len-secondary/50"
+                      onClick={() => setViewingVideo(!viewingVideo)}
+                      className={`px-4 py-2 rounded-xl border-2 border-dashed transition-all font-bold text-sm flex items-center gap-1.5 ${
+                        viewingVideo 
+                          ? "border-red-500 bg-red-50 text-red-600 shadow-lg" 
+                          : "border-len-primary/30 bg-len-card text-len-primary hover:bg-red-50 hover:text-red-600 hover:border-red-200"
                       }`}
                     >
-                      {part.composition || part.name}
+                      {viewingVideo ? (
+                        <>
+                          <ImageIcon className="w-4 h-4" />
+                          Xem ảnh
+                        </>
+                      ) : (
+                        <>
+                          <Youtube className="w-4 h-4" />
+                          Xem video
+                        </>
+                      )}
                     </button>
-                  ))}
+                  )}
                 </div>
               </div>
             )}
